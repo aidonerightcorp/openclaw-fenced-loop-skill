@@ -1,0 +1,151 @@
+{
+  "schema_id": "universal.fenced.loop.effort.grid.v1",
+  "grid_id": "fenced_task_loop_and_effort_grid_v1",
+  "generation": 1,
+  "sqlite_ pragmas_note": "Universal domain-agnostic configuration grid for fenced task leases, verified artifact reuse, and zero-network effort calibration.",
+  "parameters": [
+    {
+      "name": "effort_policy",
+      "kind": "choice",
+      "choices": ["minimal", "low", "medium", "high", "adaptive"],
+      "default": "adaptive"
+    },
+    {
+      "name": "resume_packet_byte_cap",
+      "kind": "integer_range",
+      "low": 160,
+      "high": 1024,
+      "step": 32,
+      "default": 320,
+      "expansion_step": 128,
+      "hard_ceiling": 4096
+    },
+    {
+      "name": "lease_ttl_seconds",
+      "kind": "integer_range",
+      "low": 30,
+      "high": 1800,
+      "step": 30,
+      "default": 300,
+      "expansion_step": 300,
+      "hard_ceiling": 7200
+    },
+    {
+      "name": "output_budget_floor_tokens",
+      "kind": "integer_range",
+      "low": 128,
+      "high": 2048,
+      "step": 64,
+      "default": 640,
+      "expansion_step": 256,
+      "hard_ceiling": 8192
+    },
+    {
+      "name": "trivial_prompt_char_cap",
+      "kind": "integer_range",
+      "low": 16,
+      "high": 160,
+      "step": 8,
+      "default": 48,
+      "expansion_step": 32,
+      "hard_ceiling": 512
+    },
+    {
+      "name": "high_effort_char_floor",
+      "kind": "integer_range",
+      "low": 160,
+      "high": 2048,
+      "step": 64,
+      "default": 448,
+      "expansion_step": 256,
+      "hard_ceiling": 8192
+    },
+    {
+      "name": "verification_quorum",
+      "kind": "integer_range",
+      "low": 1,
+      "high": 5,
+      "step": 1,
+      "default": 1,
+      "expansion_step": 1,
+      "hard_ceiling": 9
+    },
+    {
+      "name": "distinct_checker_required",
+      "kind": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "high_floor_above_trivial_cap",
+      "left_param": "high_effort_char_floor",
+      "operator": "gt",
+      "right_param": "trivial_prompt_char_cap"
+    }
+  ],
+  "regime_cells": {
+    "interactive_light": {
+      "effort_policy": "adaptive",
+      "resume_packet_byte_cap": 288,
+      "lease_ttl_seconds": 180,
+      "output_budget_floor_tokens": 384,
+      "trivial_prompt_char_cap": 48,
+      "high_effort_char_floor": 448,
+      "verification_quorum": 1,
+      "distinct_checker_required": true
+    },
+    "durable_multi_worker": {
+      "effort_policy": "adaptive",
+      "resume_packet_byte_cap": 320,
+      "lease_ttl_seconds": 300,
+      "output_budget_floor_tokens": 640,
+      "trivial_prompt_char_cap": 40,
+      "high_effort_char_floor": 384,
+      "verification_quorum": 1,
+      "distinct_checker_required": true
+    },
+    "deep_verification": {
+      "effort_policy": "adaptive",
+      "resume_packet_byte_cap": 512,
+      "lease_ttl_seconds": 600,
+      "output_budget_floor_tokens": 1024,
+      "trivial_prompt_char_cap": 32,
+      "high_effort_char_floor": 320,
+      "verification_quorum": 2,
+      "distinct_checker_required": true
+    }
+  },
+  "runtime_constants": {
+    "sqlite_busy_timeout_ms": 5000,
+    "hash_hex_prefix_len": 16,
+    "system_section_max_chars": 900,
+    "pre_llm_context_char_cap": 640,
+    "medium_effort_char_floor": 144,
+    "structured_headroom_multiplier": 2,
+    "constraint_markers": [
+      "prove",
+      "verify",
+      "sql",
+      "schema",
+      "theorem",
+      "deadlock",
+      "race",
+      "bitemporal",
+      "quorum",
+      "invariant",
+      "optimize",
+      "circuit"
+    ],
+    "structured_markers": [
+      "json",
+      "yaml",
+      "schema",
+      "function",
+      "tool"
+    ],
+    "high_effort_marker_count_floor": 2,
+    "medium_effort_marker_count_floor": 1,
+    "saturation_margin_ratio": 0.95
+  }
+}
