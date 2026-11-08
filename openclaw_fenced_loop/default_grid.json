@@ -1,0 +1,116 @@
+{
+  "schema_id": "universal.openclaw.fenced.composer.grid.v1",
+  "grid_id": "openclaw_fenced_composer_grid_v1",
+  "generation": 1,
+  "parameters": [
+    {
+      "name": "effort_policy",
+      "kind": "choice",
+      "choices": ["minimal", "low", "medium", "high", "adaptive"],
+      "default": "adaptive"
+    },
+    {
+      "name": "resume_packet_byte_cap",
+      "kind": "integer_range",
+      "low": 160,
+      "high": 1024,
+      "step": 32,
+      "default": 320,
+      "expansion_step": 128,
+      "hard_ceiling": 4096
+    },
+    {
+      "name": "lease_ttl_seconds",
+      "kind": "integer_range",
+      "low": 30,
+      "high": 1800,
+      "step": 30,
+      "default": 300,
+      "expansion_step": 300,
+      "hard_ceiling": 7200
+    },
+    {
+      "name": "max_composer_stages",
+      "kind": "integer_range",
+      "low": 2,
+      "high": 8,
+      "step": 2,
+      "default": 6,
+      "expansion_step": 4,
+      "hard_ceiling": 32
+    },
+    {
+      "name": "verification_quorum",
+      "kind": "integer_range",
+      "low": 1,
+      "high": 5,
+      "step": 1,
+      "default": 1,
+      "expansion_step": 1,
+      "hard_ceiling": 9
+    },
+    {
+      "name": "distinct_checker_required",
+      "kind": "boolean",
+      "default": true
+    },
+    {
+      "name": "manifest_compact_json",
+      "kind": "boolean",
+      "default": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "resume_cap_above_stage_cap",
+      "left_param": "resume_packet_byte_cap",
+      "operator": "gt",
+      "right_param": "max_composer_stages"
+    }
+  ],
+  "regime_cells": {
+    "interactive_light": {
+      "effort_policy": "adaptive",
+      "resume_packet_byte_cap": 288,
+      "lease_ttl_seconds": 180,
+      "max_composer_stages": 4,
+      "verification_quorum": 1,
+      "distinct_checker_required": true,
+      "manifest_compact_json": true
+    },
+    "durable_multi_worker": {
+      "effort_policy": "adaptive",
+      "resume_packet_byte_cap": 320,
+      "lease_ttl_seconds": 300,
+      "max_composer_stages": 8,
+      "verification_quorum": 1,
+      "distinct_checker_required": true,
+      "manifest_compact_json": true
+    },
+    "deep_verification": {
+      "effort_policy": "high",
+      "resume_packet_byte_cap": 512,
+      "lease_ttl_seconds": 600,
+      "max_composer_stages": 8,
+      "verification_quorum": 2,
+      "distinct_checker_required": true,
+      "manifest_compact_json": true
+    }
+  },
+  "runtime_constants": {
+    "sqlite_busy_timeout_ms": 5000,
+    "hash_hex_prefix_len": 16,
+    "saturation_margin_ratio": 0.9,
+    "default_valid_ttl_seconds": 3600.0
+  },
+  "test_vectors": {
+    "base_timestamp": 1000.0,
+    "step_timestamp": 5.0,
+    "expired_advance_seconds": 400.0,
+    "clamp_below_low": 64,
+    "clamp_above_high": 9000,
+    "saturated_stage_count": 8,
+    "oversized_checkpoint_repeat": 40,
+    "quorum_two": 2
+  }
+}

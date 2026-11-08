@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openclaw-fenced-loop"
+version = "0.2.0"
+description = "Grid-governed fenced task leases, verified artifact reuse, and iterative multi-worker artifact composition for OpenClaw and MCP workflows."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["openclaw_fenced_loop*"]
+
+[tool.setuptools.package-data]
+openclaw_fenced_loop = ["*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
